@@ -1,0 +1,84 @@
+#+TITLE: Scaling and Translation of Signals
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-10
+#+LATEX_HEADER: \newcommand*\rect{\mathrm{rect}}
+
+* Scaling and Translation
+  
+** Basic rules
+
+- $y(t) = x(t) + c$ *shifts* $x(t)$ up by $c$.
+- $y(t) = x(t - c)$ *shifts* $x(t)$ to the right by $c$.
+- $y(t) = cx(t)$ *scales* $x(t)$ in the $y$-axis by $c$.
+- $y(t) = x(ct)$ *scales* $x(t)$ in the $t$-axis by $c$.
+- $y(t) = x(-t)$ *reverses* $x(t)$ about the $t = 0$ axis.
+  
+** Why do we care?
+   
+We are going to be using these methods for convolution of signals.
+
+** Shift then scale
+
+In this case, we start by shifting the function in the $y$-axis, then scaling it
+up appropriately.
+
+** Scale then shift
+
+In this case, we first scale the function in the $t$-axis, then shift it in the
+$t-axis$.
+
+Use this when you need to compress or invert a function.
+
+* Even/Odd
+  
+** Even
+   
+- Definition :: $x(t) = x(-t)$
+- Example :: $\cos(\omega_0 t)$
+             
+** Odd
+
+- Definition :: $x(t) = -x(-t)$
+- Example :: $\sin(\omega_0 t)$
+             
+** Decomposition
+
+Any function can be decomposed into its even part and odd part.
+
+- Even part :: $x_e(t) = \frac{1}{2} [ x(t) + x(-t) ]$
+- Odd part :: $x_o(t) = \frac{1}{2} [ x(t) - x(-t) ]$
+
+These two functions can be summed to get the original function:
+$$ x(t) = x_e(t) + x_o(t) $$
+
+* Step, Ramp, Rect
+  
+** Step
+
+$u(t) = 1$ for $t > 0$, $u(t) = 0$ for $t < 0$.
+
+** Ramp
+
+$r(t) = t$ for $t > 0$, $r(t) = 0$ for $t < 0$.
+This is related to the Heaviside function like so: $r(t) = t u(t)$.
+
+Additionally, $\frac{dr}{dt} = u(t)$. This property is useful because the unit
+step response function can be turned into a ramp response using this property for
+any linear-time invariant (LTI) system.
+
+** Rect
+
+$\rect(t) = 1$ for $|t| < \frac{1}{2}$, $\rect(t) = 0$ for $|t| > \frac{1}{2}$.
+The width of the rect function is 1.
+
+*Note:* $\rect(\frac{t - T}{\tau})$ creates a rectangle with width $\tau$ and
+centered at $T$.
+
+* Linear Combinations
+  
+Express a trapezoidal signal.
+
+- Ramp up :: $y(t) = r(t)$
+- Level off at $t = 1$ :: $y(t) = r(t) - r(t - 1)$
+- Ramp down :: $y(t) = r(t) - r(t - 1) - r(t - 2)$
+- Level off at $t = 3$ :: $y(t) = r(t) - r(t - 1) - r(t - 2) + r(t - 3)$

@@ -1,0 +1,85 @@
+#+TITLE: Complex Numbers and Simple Signals and Systems
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-10
+#+LATEX_HEADER: \newcommand*\atan{\tan^{-1}}
+
+* Basics of Complex Numbers
+
+** Definitions
+
+- Imaginary part :: $j = \sqrt{-1}$
+- Rectangular :: $z = x + jy$
+- Polar :: $z = Me^{j\theta}$
+- Euler's theorem :: $e^{j\theta} = \cos \theta + j \sin \theta$
+     
+** Complex conjugate
+
+\begin{align*}
+z^* = x - jy = Me^{-j\theta} \\
+|z^*| &= |z| \\
+\arg[z^*] &= -\arg[z] \\
+|z^2| &= z z^* \\
+\frac{1}{z} = \frac{1}{z} \frac{z^*}{z^*} &= \frac{z^*}{|z|^2}
+\end{align*}
+
+*** Useful identites
+
+\begin{align*}
+A \cos (\omega t + \theta) &= \frac{1}{2} (z + z^*) \\
+\text{where } z &= Ae^{j \theta} e^{j \omega t}
+\end{align*}
+
+** Converting between forms
+
+- Polar to rectangular :: $Me^{j\theta} = M \cos \theta + j M \sin \theta$
+- Rectangular to polar :: $x + jy = \sqrt{x^2 + y^2} e^{j \atan \frac{y}{x}}$
+
+It's easier to add and subtract in rectangular, but easier to multiply and divide
+in polar form.
+
+** Example 1
+
+\begin{align*}
+2 \sqrt{3} e^{j \frac{\pi}{6}} + 2 e^{-j \frac{\pi}{3}}
+&= 2 \sqrt{3} \frac{\sqrt{3}}{2} + 1 + 2j \sqrt{3} \frac{1}{2} + 2j \sqrt{3} \frac{\sqrt{3}}{2} \\
+&= 2 + 2j (\sqrt{3}{2} + 1)
+\end{align*}
+
+** Phasors
+
+When you have a sinusoid $x(t) = M \cos (\omega t + \theta)$, it's easier to
+concern yourself with just the phase, which is expressed as $X = M e^{j \theta}$
+right from the definition of $x(t)$.
+
+You can reverse this like so: $x(t) = \Re [X e^{j \omega t} ]$.
+
+Another helpful technique is when adding same-frequency sinusoids:
+\begin{align*}
+A \cos (\omega t + \theta) + B \cos (\omega t + \phi)
+&= \Re [ e^{j \omega t} (Ae^{j \theta} + Be^{j \phi}) ] \\
+\text{Let } C e^{j \sigma} &= Ae^{j \theta} + Be^{j \phi} \\
+\implies 
+A \cos (\omega t + \theta) + B \cos (\omega t + \phi)
+&= C \cos (\omega t + \sigma)
+\end{align*}
+
+*** Example 1
+    
+\begin{align*}
+X &= 3 (e^{j 0} + e^{j 120\deg} + e^{j 240\deg}) \\
+&= 3 (1 + e^{j(180\deg - 60\deg)} + e^{j(180\deg + 60\deg)}) \\
+&= 3 (1 + e^{j \pi} (e^{j 60\deg} + e^{-j 60\deg})) \\
+&= 3 (1 + -1) \\
+&= 0
+\end{align*}
+
+** Powers and Roots
+
+DeMoivre's Theorem: $z^N = |z|^N e^{jN\arg[z]}$.
+This implies that $(\cos \theta + j \sin \theta)^N = \cos (N \theta) + j \sin (N \theta)$.
+
+The solutions of $z^N - Ae^{j \theta} = 0$ are given by
+\begin{align*}
+z &= A^{\frac{1}{N}} e^{j\theta N} e^{\frac{j 2\pi k}{N}} \\
+\text{where } &\{ k < N, k \in \mathbb{Z}^+ \}
+\end{align*}
