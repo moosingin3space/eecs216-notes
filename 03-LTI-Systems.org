@@ -1,0 +1,65 @@
+#+TITLE: Linear Time-Invariant Systems
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-15
+
+* What is a Linear Time-Invariant System?
+
+- Scaling Property :: Output and input scale together.
+     $x(t) \rightarrow y(t) \implies ax(t) \rightarrow ay(t)$, where $a$ is a constant.
+- Additivity Property :: The sum of inputs equals the sum of each output.
+     $(x_1(t) + x_2(t)) \rightarrow (y_1(t) + y_2(t))$
+- Time-Invariance :: If there is a time delay in the input,
+     the same delay must exist in the output.
+     $x(t) \rightarrow y(t) \implies x(t - T) \rightarrow y(t - T)$, where $T$ is a constant.
+
+Most (but *definitely* not all) of the time, you can show that a system is
+linear by doubling the input and verifying that the output is also doubled.
+
+If $t$ occurs only inside $x(t)$, $y(t)$, or in derivatives or the limits of a
+definite integral, it is time-invariant.
+
+** Helpful properties
+
+- Differentiation follows the scaling property.
+- Taking a non-linear function of the input will produce a non-linear system.
+* Linear Constant-Coefficient Different Equations (LCCDEs)
+  
+If all coefficients in a differential equation are constant, and the equation is
+a linear combination of derivatives, it is a LTI system.
+
+** Circuits
+
+Ideal resistors, inductors, capacitors, and op-amps are linear if there is a
+single independent source. Ideal models are actually quite good if the system
+exists in a reasonable range of temperatures.
+
+* Analyzing an LTI system
+
+If a system responds from an /impulse/ $\delta(t) \rightarrow h(t)$, the response
+to *any* input $x(t)$ can be described as:
+$$ x(t) \rightarrow y(t) = \int_{-\infty}^{\infty} h(\tau) x(t - \tau) d\tau $$
+
+** Special case of impulse response formula
+
+If you feed a cosine into an LTI system, it will return a cosine with the same
+frequency:
+$$ \cos (\omega t) \rightarrow A \cos (\omega t + \theta) $$
+
+* Causal system
+  
+A system that only depends on past and present values.
+$$ y(t) = F(x(t), r \le t) $$
+
+There are *no* physical systems that are non-causal.
+
+LTI system is causal \iff \text{The impulse response $h(t)$ is causal}
+
+* Memory-less system
+
+A system that only depends on present inputs.
+$$ y(t) = F(x(t)) $$
+
+A memory-less system need not be time-invariant.
+
+An LTI memory-less system looks like:
+$$ y(t) = k x(t) $$

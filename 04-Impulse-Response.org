@@ -1,0 +1,90 @@
+#+TITLE: Impulse Response
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-17
+#+LATEX_HEADER: \newcommand*\laplace{\mathcal{L}}
+
+* Series RC Circuit Response to Inputs
+  
+Let $x(t)$ be the input voltage, and let $y(t)$ be the voltage across the
+capacitor.
+
+Let $s(t)$ be the step response $s(t) = (1 - e^{-\frac{t}{RC}} u(t))$.
+
+Remember that linear combination rules hold.
+
+** Step
+   
+- Input :: $x(t) = u(t)$
+- Output :: $y(t) = s(t)$
+- Time constant :: $RC$ seconds
+
+** Pulse
+   
+- Input :: $x(t) = A u(t) - A u(t - T)$
+           where $A$ is the height and $T$ is the length of the pulse.
+- Output :: $y(t) = A s(t) u(t) - A s(t - T) u(t - T)$
+
+** Ramp
+   
+- Input :: $x(t) = r(t) = \int_{-\infty}^t u(\tau) d\tau$
+- Output :: $y(t) = R(t) = \int_{-\infty}^t s(\tau) d\tau$
+            which solves to $y(t) = (t - RC(1 - e^{-\frac{t}{RC}}))u(t)$
+- Tip :: Make sure each term has units of time.
+
+** Wedge
+  
+- Input :: $x(t) = r(t) - r(t - 2) - 2u(t - 2)$
+- Output :: $y(t) = R(t) - R(t - 2) - 2s(t - 2)$
+            which becomes very long and disgusting, and as such is omitted here.
+
+** Triangle
+   
+- Input :: $x(t) = r(t) - 2r(t - 1) + r(t - 2)$
+- Output :: $y(t) = R(t) - 2R(t - 1) + R(t - 2)$
+            which is also omitted here to emphasize that it is a linear
+            combination.
+
+* Impulse $\delta(t)$
+  
+- Definition :: The limit of a short, high pulse.
+                $\delta(t) = \lim_{T \rightarrow 0} \frac{1}{T} u(t) - \frac{1}{T} u(t - T)$
+- Elementary Properties :: The width is zero, the height is infinity,
+     and (somehow) the area is 1.
+- Integration :: When integrating a product including an impulse, the result
+                 is the integrand, with the singularity point substituted in.
+                 If the singularity isn't located inside the limits of
+                 integration, the integral is 0.
+- Sifting property :: $\int_{-\infty}^{\infty} x(t) \delta(t - c) dt = x(c)$
+- Compression :: $\delta(at) = \frac{1}{|a|} \delta(t)$
+                 A useful, related formula: 
+                 $\delta(at - b) = \frac{1}{|a|} \delta(t - \frac{b}{a})$
+- Laplace Transform :: $\laplace [\delta(t)] = 1$
+- Even/Odd :: even
+- Units :: An impulse is specified in hertz.
+ 
+It is *not* a function. Do not call it that! 
+
+The derivative of the step function $u(t)$ is $\delta(t)$.
+
+* Computing impulse response $h(t)$
+  
+The impulse doesn't exist, so how do we find the response? 
+We could choose to calculate it as the limit of a pulse, which
+results in $h(t) = \frac{1}{RC} e^{-\frac{t}{RC}} u(t)$.
+
+From linearity rules, $\frac{d}{dt} u(t) = \delta(t)$, therefore,
+$\frac{d}{dt} s(t) = h(t)$. This is actually very easy. 
+
+From the impulse response, you can find LTI responses to any input function.
+
+* Derivation of convolution integral
+  
+Assume an LTI system.
+1. $\delta(t) \rightarrow h(t)$ by definition of impulse response.
+2. $\delta(t - \tau) \rightarrow h(t - \tau)$ by definition of time-invariance.
+3. $x(\tau)\delta(t - \tau) \rightarrow x(\tau)h(t - \tau)$ by scaling.
+4. $\int x(\tau)\delta(t - \tau) d\tau \rightarrow \int x(\tau)h(t - \tau) d\tau$ by
+   additivity.
+5. $x(t) \rightarrow \int x(\tau) h(t - \tau) d\tau = h(t) * x(t)$ by sifting property.
+   
+This defines how the response for /any function/ $x(t)$ can be found.
