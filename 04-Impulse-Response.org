@@ -88,3 +88,15 @@ Assume an LTI system.
 5. $x(t) \rightarrow \int x(\tau) h(t - \tau) d\tau = h(t) * x(t)$ by sifting property.
    
 This defines how the response for /any function/ $x(t)$ can be found.
+
+Convolution is commutative, associative, and distributive. The convolution of
+two causal signals is guaranteed to be causal.
+
+* Graphical representation of convolution
+
+The function $h(t - \tau)$, where $t$ is held constant, is simply the function
+$h(\tau)$ flipped in the $\tau$-axis and shifted by $t$.
+
+As $\tau$ is being integrated over, this can be viewed as the area under the
+product of the continually-shifting function $h(t - \tau)$ and the input signal
+$x(\tau)$.

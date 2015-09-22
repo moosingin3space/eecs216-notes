@@ -1,0 +1,41 @@
+#+TITLE: Convolution
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-22
+#+LATEX_HEADER: \newcommand*\lapl{\mathcal{L}}
+
+* Properties of Convolution
+
+- Sifting :: $x(t) * \delta(t - T) = x(t - T)$
+- Integrating :: $x(t) * u(t) = \int_{-\infty}^t x(\tau) d\tau$
+- Delays :: $y(t-a+b) = x(t + b) * h(t - a)$
+- Linearity :: $h(t) * (x_1(t) + x_2(t)) = h(t) * x_1(t) + h(t) * x_2(t)$
+- Causality :: If $x(t)$ is causal, the signal $h(t) * x(t)$ will be causal. 
+               This means you can start integrating at 0 instead of -\infty.
+- Areas :: The area under the output $y(t)$ is equal to the product of the areas
+           under the input $x(t)$ and the impulse response $h(t)$.
+- Laplace Transform :: $\lapl[h(t) * s(t)] = \lapl[h(t)] \lapl[s(t)]$
+- Elementary Properties :: Commutative, Associative, and Distributive
+
+* Interconnection of Systems
+** Cascade
+   
+By the associative property of convolution, a cascade (series) system can be
+expressed as $h_{eff}(t) = h_1(t) * h_2(t)$.
+
+** Parallel
+   
+By the distributive property of convolution, a parallel system can be expressed
+as $h_{eff}(t) = h_1(t) + h_2(t)$.
+
+* BIBO Stability
+  
+A /bounded signal/ means that $|x(t)| < M$ for all time.
+
+A system is /BIBO stable/ if a bounded input (BI) yields a bounded output (BO).
+
+An LTI system is BIBO stable if integrating the absolute impulse response over
+the entire domain is finite, and conversely.
+
+* Computation of Convolution
+
+Drawing pictures and using laws of linearity really help!
