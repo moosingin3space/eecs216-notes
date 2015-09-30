@@ -1,0 +1,126 @@
+#+TITLE: Transfer Functions
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-29
+#+LATEX_HEADER: \newcommand*\lapl{\mathcal{L}}
+
+* Transfer functions
+
+$H(s) = \lapl[h(t)]$, which is a rational number.
+$H(s) = \frac{Y(s)}{X(s)}$
+
+* LTI System Description Relationships
+  
+- $h(t)$ is the impulse response.
+- $H(s)$ is the transfer function, which is the Laplace transform of $h(t)$.
+- A system of differential equations can be easily translated into a transfer 
+  function; simply solve the system and solve $Y(s) = H(s) X(s)$.
+- The transfer function can be converted into a frequency response function 
+  $H(j\omega)$ by substituting $s = j\omega$ into the transfer function.
+- You can get the poles and zeros from the transfer function.
+* Examples
+
+** Ex 1
+
+Given $h(t) = e^{-2t} u(t) + e^{-4t} u(t)$, take the Laplace transform to get
+$H(s) = \frac{2s + 6}{s^2 + 6s + 8} = \frac{2(s + 3)}{(s + 4)(s + 2)}$, which
+shows a single zero at $s = -3$ and two poles at $s = -2$ and $s = -4$. To
+get this in differential equation form, cross-multiply $\frac{Y(s)}{X(s)} = H(s)$.
+This results in $(s^2 + 6s + 8) Y(s) = (2s + 6) X(s)$, which can be inverse-
+Laplace-transformed to $\frac{d^2 y}{dt^2} + 6 \frac{dy}{dt} + 8y = 2 \frac{dx}{dt} + 6x$.
+
+** Ex 2
+
+Given the differential equation 
+$\frac{d^2 y}{dt^2} + 5 \frac{dy}{dt} + 6y = \frac{d^2 x}{dt^2} + 5\frac{dx}{dt} + 4x$,
+take the Laplace transform to get $(s^2 + 5s + 6) Y(s) = (s^2 + 5s + 4) X(s)$.
+From here, we can get $H(s) = \frac{s^2 + 5s + 4}{s^2 + 5s + 6}$. The zeros of 
+this function are $s = \{ -1, -4 \}$, and the poles are $s = \{ -2, -3 \}$. To
+convert this into the impulse response function, we take the inverse Laplace 
+transform using Matlab's residue method function, which returns
+$h(t) = \delta(t) + 2e^{-3t} u(t) - 2e^{-2t} u(t)$.
+** Ex 3
+
+Given an input-output pair $x(t) = e^{-2t} u(t)$ and 
+$y(t) = e^{-2t} u(t) - e^t u(t)$, start by taking the Laplace transform
+of both functions. This results in $X(s) = \frac{1}{s+2}$ and 
+$Y(s) = \frac{1}{s+2} - \frac{1}{s - 1} = \frac{-3}{(s + 2)(s - 1)}$. Now, 
+divide them to get the transfer function $H(s) = \frac{-3}{s - 1}$.
+From here, proceed to find other system descriptions.
+
+** Ex 4
+
+Given a zeros-and-poles diagram and a value of the transfer function, begin by
+specifying what $H(s)$ should look like.
+
+- Given :: Zeros: +1, Poles: -3, $H(0) = -1$
+\begin{align*}
+H(s) &= C \frac{s - 1}{s + 3} \\
+H(0) = -1 &= C \frac{0 - 1}{0 + 3} \\
+&= -C \frac{1}{3} \\
+\implies C = -1 (-3) &= 3
+\end{align*}
+
+
+** Frequency Response Ex 1
+
+Given $\sin (3t) u(t) \rightarrow 3e^{-3t} u(t) - 3\cos (3t) u(t)$, find
+$H(s)$, $h(t)$, and a differential equation.
+
+Through Laplace methods, we arrive at
+$$ H(s) = \frac{9 - 3s}{s + 3} = -3 + \frac{18}{s + 3} $$
+which implies that
+$$ h(t) = -3\delta(t) + 18e^{-3t} u(t) $$
+and
+$$ \frac{dy}{dt} + 3y = 9x - 3\frac{dx}{dt} $$
+
+Now, find the steady-state response to $\cos(4t)$. This is a "sine-in, sine-out" 
+problem.
+\begin{align*}
+H(j \omega) &= H(s)|_{s = j\omega} \\
+&= \frac{9 - j 3 \omega}{j \omega + 3}
+\end{align*}
+Substitute in the frequency ($\omega = 4$):
+$$ H(j4) = \frac{9 - j12}{j4 + 3} = \frac{15 \angle -53^{\circ}}{5 \angle 53^{\circ}} = 3\angle -106^{\circ} $$
+
+The steady-state response to $\cos(4t)$ is $3 \cos (4t - 106^{\circ})$.
+
+** Frequency Response Ex 2
+
+Given a frequency response function $H(j\omega) = \frac{3 + j\omega}{(2 - \omega^2) + j3\omega}$
+, substitute $s = j\omega$ to get the transfer function. $\omega^2 = -s^2$ is a 
+useful substitution for solving this one, in particular
+$$ H(s) = \frac{s + 3}{s^2 + 3s + 2} $$
+
+This problem is now pretty easy.
+
+
+** Complex Poles in Transfer functions
+   
+Take the residue of a messy transfer function, convert residues to polar, factor
+out the real part, then attempt to eliminate the imaginary part using
+identities.
+   
+Always remember: $e^{j x} + e^{-j x} = 2\cos (x)$.
+
+* Matlab =residue= function
+  
+The =residue= function takes two row vectors corresponding to the coefficients
+of the numerator, then denominator.
+
+It returns three values: the residues, poles, and constants.
+
+Example: to solve $\frac{s^2 + 5s + 4}{s^2 + 5s + 6}$, the two vectors are
+=[1 5 4]= and =[1 5 6]=. 
+
+#+BEGIN_SRC
+> [r p k] = residue([1 5 4], [1 5 6])
+r = [2 -2]
+p = [-3 -2]
+k = 1
+#+END_SRC
+
+The values $r$ become numerators, and the values of $p$ become poles. The value 
+of $k$ is a free constant. This equation looks like
+$$ 1 + \frac{2}{s + 3} - \frac{2}{s + 2} $$
+
+and can easily be inverse-Laplace-transformed.

@@ -1,0 +1,22 @@
+#+TITLE: Frequency Response
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-09-24
+
+* Frequency Response
+
+If the exponential $e^{j\omega t}$ is fed into an LTI system, you get a sinusoid
+$H(j\omega) e^{j\omega t}$ out.
+
+Draw a diagram when solving these problems!
+
+* Sine-in $\rightarrow$ Sine-out
+
+For a BIBO-stable LTI system, a sinusoid will be multiplied by the Fourier
+transform of the frequency response function at that frequency.
+
+$$ A \cos (\omega t + \phi) \rightarrow A |H(j \omega)| \cos (\omega t + \phi + \angle H(j \omega)) $$
+
+*NOTE:* Whenever actually solving a problem, use complex numbers -- sinusoids
+are awful to work with otherwise.
+
+Always remember: $e^{jx} + e^{-jx} = 2 \cos x$
