@@ -1,0 +1,63 @@
+#+TITLE: System Responses
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-01
+#+LATEX_HEADER: \newcommand*\lapl{\mathcal{L}}
+
+* Summary
+  
+To get a complete response:
+- Add a zero-input response and a zero-state response
+- Add a forced response and a natural response
+- Add a transient response and a steady-state response
+
+* Zero-input response
+  Entirely due to initial conditions, assuming the input is 0.
+  
+To find this from a circuit, simply disable all input voltage sources.
+
+The poles of the $s$-domain zero-input response give the general form of the
+ZIR. It will look like
+$$ zir(t) = \sum_{i = 0}^{N} B_i e^{-p_i t} u(t) $$
+
+You can cancel one of the poles when separating for partial fraction expansion.
+\begin{align*}
+V(s) &= \frac{(s + 4)v(0) - 24}{(s + 1)(s + 3)} \\
+&= \frac{B (s + 1)}{(s + 3) (s + 1)} \\
+&= \frac{B}{s + 3} \\
+\implies zir(t) &= B e^{-3t} u(t)
+\end{align*}
+Solve for $B$.
+
+* Zero-state response
+  Entirely due to the input, assuming input conditions are 0. 
+  
+- Physically :: capacitors are uncharged, inductors have zero fields.
+                
+If initial conditions can be assumed to be 0, $Y(s) = H(s) X(s)$. Simply solve
+the zero-state response using prior techniques.
+
+*NOTE:* System is /stable/ $\iff$ all poles satisfy $\Re[p_i] < 0$.
+
+* Forced and natural responses
+  Forced looks like the input,
+  Natural looks like the impulse response.
+
+Given an input $x(t) = \sum B_i e^{q_i t} u(t)$ and a system
+$h(t) = \sum C_i e^{p_i t} u(t)$, we find that the form for the
+forced response $y_{f}(t) = \sum B_i H(q_i) e^{q_i t} u(t)$, and the form
+for the natural response $y_{nat}(t) = \sum C_i X(p_i) e^{p_i t} u(t)$.
+
+The following holds:
+\begin{align*}
+h(t) &= \sum_i C_i e^{p_i t} u(t) & H(s) &= \lapl[h(t)] \\
+x(t) &= \sum_i B_i e^{q_i t} u(t) & X(s) &= \lapl[x(t)] \\
+y(t) &= \sum_i D_i H(q_i) e^{q_i t} u(t) + \sum_i E_i X(p_i) e^{p_i t} u(t)
+\end{align*}
+
+* Transient and steady-state responses
+  Transient decays to 0 relatively quickly,
+  Steady-state does not decay.
+  
+When trying to solve for steady-state response, simply use phasor math - an LTI
+system will always produce the same frequency output as input, only phase will
+be adjusted.
