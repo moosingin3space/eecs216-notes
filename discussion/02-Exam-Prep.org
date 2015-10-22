@@ -1,0 +1,174 @@
+#+TITLE: Exam 1 Prep
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-01
+
+(Based on the exam available on CTools.)
+* Problem 1: Multiple-choice
+  
+** 1
+   
+The system described by $\frac{dy}{dt} + \pi^2 y(t) = \frac{dx}{dt} + x^2(t)$ 
+can be described as:
+- a :: Linear and Time-Invariant
+- b :: Linear and Time-Varying
+- c :: Non-linear and Time-Invariant
+- d :: Non-linear and Time-Varying
+- e :: Insufficient information to answer
+       
+As $t$ only occurs in the derivative and in a parameter to $y(t)$ or $x(t)$, it
+is time-invariant. It is /not/ linear - $x(t)$ is squared.
+
+The correct answer is *c*.
+
+** 2
+   
+$$ y(t) = e^t x(t - t_0) $$
+
+- a :: Linear and Time-Invariant
+- b :: Linear and Time-Varying
+- c :: Non-linear and Time-Invariant
+- d :: Non-linear and Time-Varying
+- e :: Insufficient information to answer
+       
+This is linear because you can double $x(t)$ and $y(t)$ will double. It is
+/not/ time-invariant though, because different delays are multiplied by each
+other.
+
+The correct answer is *b*.
+
+** 3
+   
+$$ h(t) = t^5 e^{-0.5t}u(t - 100) $$
+
+- a :: BIBO stable and causal
+- b :: causal but not BIBO stable
+- c :: BIBO stable but not causal
+- d :: neither BIBO stable nor causal
+- e :: Insufficient information to answer
+
+The decaying exponential function decays faster than the power function
+increases, which implies BIBO stability. The system is causal because $h(t) = 0$
+for any $t < 0$.
+
+The correct answer is *a*.
+
+** 4
+   
+Find the frequency response of
+$$ 2\frac{d^2 y}{dt^2} + 3y(t) = 4\frac{dx}{dt} $$
+
+- a :: \frac{4}{2j\omega^2 + 3}
+- b :: \frac{4}{2(j\omega)^2 + 3}
+- c :: \frac{4j\omega}{2j\omega^2 + 3}
+- d :: \frac{4j\omega}{2(j\omega)^2 + 3}
+- e :: None of the above
+       
+Right off the bat, we can eliminate *a* and *c* because $(j\omega)$ must be
+squared, not $\omega$ because of the Laplace transform equality $s = j\omega$.
+Using the Laplace transform, you get
+$$ (2s^2 + 3)Y(s) = 4sX(s) $$
+which, after manipulation, becomes what we see in answer choice *d*.
+
+The correct answer is *d*.
+
+** 5
+   
+When the signal $x(t) = 5 + \cos(12t + \frac{\pi}{4})$ is applied to a system,
+the output $y(t) = 6\sin (12t) + 0.5 \cos(24t + \frac{\pi}{4})$.
+Which is true?
+
+- a :: The system is LTI with $H(0) = 0$ and $H(j12) = 6$.
+- b :: The system is LTI with $H(0) = 0$ and $\|H(j12)\| = 6$.
+- c :: The system is not LTI because the constant input 5 disappears at the
+       output.
+- d :: The system is not LTI because the cos function becomes a sin function.
+- e :: All above statements are incorrect.
+
+This cannot be an LTI system because the frequency must stay constant. Neither
+of the explanations for *c* or *d* work, so the answer is *e*.
+
+The correct answer is *e*.
+
+* Problem 2
+  
+The impulse response $h(t)$ of an LTI system is given by
+$$ h(t) = \sqrt{1.5}[u(t) - u(t - 1.5)] $$
+The input signal
+\begin{align*}
+x(t) &= 0 & t < 0 \lor t \ge 2 \\
+x(t) &= \sqrt{1.5}t & 0 \le t < 1 \\
+x(t) &= \sqrt{1.5}t - 2\sqrt{1.5} & 1 < t < 2
+\end{align*}
+is applied to the system. Calculate $y(2)$.
+
+Expressing $x(t)$ in terms of steps looks like 
+$x(t) = \sqrt{1.5}t (u(t) - 2\sqrt{1.5} u(t - 1))$
+
+Convolving the two in the Laplace domain looks like:
+\begin{align*}
+H(s) &= \sqrt{1.5} (\frac{1}{s} - \frac{e^{-1.5s}}{s}) \\
+X(s) &= \sqrt{1.5} \frac{1}{s^2} (\frac{1}{s} - 2\sqrt{1.5} \frac{e^{-s}}{s}) \\
+Y(s) = H(s)X(s) &= 1.5 \frac{1}{s^2} \frac{1}{s} (1 - e^{-1.5s})(1 - 2\sqrt{1.5}e^{-s}) \\
+&= 1.5 \frac{1}{s^3} (1 - e^{-1.5s})(1 - 2\sqrt{1.5}e^{-s}) \\
+&= 1.5 \frac{1}{s^3} (1 - e^{-1.5s} - 2\sqrt{1.5}e^{-s} + 2\sqrt{1.5}e^{-2.5s}) \\
+\end{align*}
+
+This is kind of messy. It's easier to draw a picture and find the intersecting
+areas for this.
+
+* Problem 3
+  
+1. $x_1(t) = e^{j2t} \rightarrow y_1(t) = \frac{1}{2} e^{j(2t - \frac{\pi}{4})}$
+2. $x_2(t) = 2e^{-j2t} \rightarrow y_2(t)$
+   
+Find $y_2(t)$.
+
+We know that $\|H(j2)\| = \frac{1}{2}$ and $\angle H(j2) = -\frac{\pi}{4}$. 
+Therefore, $y_2(t) = \frac{1}{2} 2e^{-j2t - \frac{\pi}{4}} = e^{-j(2t - \frac{\pi}{4})}$
+
+* Problem 4
+  
+A system $\frac{dy}{dt} + 6y(t) = 3x(t)$ has initial condition $y(0) = 0$.
+
+Start by finding the transfer function $H(s)$.
+\begin{align*}
+(s + 6)Y(s) &= 3X(s) \\
+H(s) = \frac{Y(s)}{X(s)} &= \frac{3}{s + 6}
+\end{align*}
+
+Take the inverse Laplace to get the impulse response $h(t)$:
+$$ h(t) = 3e^{-6t}u(t) $$
+
+** Calculate the output $y_1(t)$ due to the input $x_1(t) = \delta(2t - 6)$
+   
+Use properties of the impulse function to re-write 
+$x_1(t) = \frac{1}{2} \delta(t - 3)$.
+
+We can use the sifting property to easily convolve this:
+$$ y_1(t) = h(t) * x_1(t) = \frac{3}{2} e^{-6(t - 3)} u(t - 3) $$
+
+** Calculate the output $y_2(t)$ due to the input $x_2(t) = u(t - 1) - 5u(t - 10)$
+   
+This can be done in the Laplace domain:
+\begin{align*}
+X_2(s) &= \frac{e^{-s}}{s} - \frac{5e^{-10s}}{s} \\
+Y_2(s) = X_2(s) H(s) &= \frac{3}{s+6} \frac{e^{-s} - 5e^{-10s}}{s} \\
+&= \frac{3e^{-s} - 15e^{-10s}}{s (s+6)} \\
+\end{align*}
+
+Partial fractions:
+TODO
+
+** Calculate the output $y_3(t)$ due to the input $x_3(t) = e^{-2t}u(t)$
+
+* Problem 5
+  
+Say we have two LTI systems in series with identical impulse responses
+$h_1(t) = h_2(t) = u(t)$.
+Input $x(t) = 2[u(t - 2) - u(t - 4)]$. Calculate $y(3)$.
+
+TODO find $h(t)$ and convolve.
+
+* Problem 6
+  
+TODO

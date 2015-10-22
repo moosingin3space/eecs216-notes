@@ -1,0 +1,69 @@
+#+TITLE: Feedback Control
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-08
+
+* Feedback Configuration
+  
+- Closed-loop configuration :: $Y(s) = H(s) [X(s) - K Y(s)]$ where $K$ is a 
+     closed-loop tuning constant.
+- Closed-loop transfer function :: $H_{CL}(s) = \frac{H(s)}{1 + K H(s)}$
+
+* Inverted Pendulum
+  
+** System Description
+
+- Input :: Acceleration $x(t)$ of the cart.
+- Output :: Angle $y(t)$ made with the vertical.
+- Assumptions :: Frictionless hinge and massless rod.
+
+** LCCDE Form
+   
+Assume the rod is 1 foot long and $g = 32 \frac{\mathrm{ft}}{\mathrm{sec}^2}$.
+After meeting with a mechanical engineer to do force and torque balancing, you
+get the following: $\frac{d^2 y}{dt^2} - 32y = -x$.
+
+** Find the transfer function
+
+\begin{align*}
+(s^2 - 32) Y(s) &= -1 X(s) \\
+\implies H(s) &= -\frac{1}{s^2 - 32} \\
+&= -\frac{1}{(s + \sqrt{32})(s - \sqrt{32})}
+\end{align*}
+
+*NOTE:* there's a pole in the right half-plane. This means that the system is
+unstable. As a result, we have to use feedback to hold it steady.
+
+** Series Compensation
+
+Let's try introducing a compensator $C(s) = 32 - s^2$ in series. Let $z(t)$ be
+the output of the compensator circuit given $x(t)$, this results in a stable
+system, cancelling the unstable pole, *BUT*, if there is /any/ variation in
+poles, the series compensator will become useless.
+** Compensator Feedback
+   
+Choose a feedback compensator $K$ to move poles to stabilize the system. This
+sets up an oscillation around the pole. This /still/ blows up - it is not 
+absolutely integrable.
+
+** PD Control
+   
+Choose $K(s) = K_p + K_d s$ instead of a constant $K$. The closed-loop transfer
+function is now $H_{CL}(s) = -\frac{K_p + K_d s}{s^2 - K_d s - [K_p + 32]}$. 
+With correct values of $K_p$ and $K_d$, this system stabilizes.
+* First-order Actuator Control
+
+Given an actuator described by LCCDE $\frac{dy}{dt} + ay = ax$, the transfer
+function is $H(s) = \frac{a}{s + a}$.
+The step response function $s(t) = (1 - e^{-at}) u(t)$ is too slow! Adding a
+simple proportional control will effectively speed this up -- the response
+is $s_{CL}(t) = \frac{K_p}{K_p + 1} (1 - e^{-(K_p + 1)at})u(t)$.
+
+* Second-order System Control
+  
+When controlling a second-order system, stabilization requires a proportional
+and derivative control (PD). In order to make it respond as fast as possible and
+hold stable, you want to set $K_p$ and $K_d$ such that the transfer function has
+a double pole in the left half-plane, so the response is critically damped.
+
+*Remember:* a quadratic equation $s^2 + b_1 s + b_2 = 0$ has a double root if
+$b_1^2 = 4b_2$.

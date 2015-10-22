@@ -1,0 +1,80 @@
+#+TITLE: Butterworth Filters
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-22
+
+* Butterworth Low-pass Filters
+  
+(Same principle applies for high-pass)
+
+- Ideal :: Squared gain $|H(j\omega)|^2 = \frac{1}{1 + (\frac{\omega}{\omega_0})^{2N} + 1}$
+This low-pass filter has a cutoff of $\omega_0$ and the gain has no ripples. It
+is also flat -- higher-order derivatives quickly become 0.
+
+See lecture slides to see how a Butterworth filter looks.
+
+Advantages:
+1. All poles lie on a circle of radius $|s| = \omega_c$, so it easily scales to
+   any cutoff frequency.
+2. It is easy to convert to a high-pass filter.
+3. Can easily be implemented using the Sallen-Key op-amp circuit.
+
+* Derivation of $H(s)$ from $|H(j\omega)|^2$
+  
+To get a /stable/ $H(s)$, we use the following:
+\begin{align*}
+\text{Let } \omega &= (-j)(j\omega) \\
+\text{Let } j\omega &= s \\
+\|H(j\omega)\|^2 &= H(j\omega)H^*(j\omega) \\
+&= H(j\omega)H(-j\omega) \\
+&= \frac{1}{(-j)^{2N} (\frac{j\omega}{\omega_0})^{2N} + 1} \\
+&= \frac{1}{(-j)^{2N} (\frac{s}{\omega_0})^{2N} + 1} \\
+&= H(s)H(-s)
+\end{align*}
+
+This is easiest to express in cases.
+If $N$ is even,
+$$ H(s)H(-s) = \frac{1}{1 + (\frac{s}{\omega_0})^{2N}} $$
+
+If $N$ is odd,
+$$ H(s)H(-s) = \frac{1}{1 - (\frac{s}{\omega_0})^{2N}} $$
+
+* Pole Locations for Butterworth Filters
+  
+There are no zeros for a Butterworth filter.
+The poles are located in a circle around the origin with radius $\omega_0$.
+Because of the symmetry of the problem, we define $H(s)$ to include only the
+poles in the left half-plane. This way, we have a stable $H(s)$.
+* Reconstruction Filter Design
+
+- Given :: spoken-word narration on a book-on-CD
+- Reconstruct :: the signal, limited to a maximum frequency of 4 kHz.
+- Know :: CD sampling rate is 44 100 Hz.
+- Gain :: Greater than 99% for all baseband spectrum, less than 0.1% for all 
+          first image spectrum
+
+The first image spectrum of CD sampling is 48 kHz. 
+\begin{align*}
+0.990 &= \frac{1}{\sqrt{1 + (4.00/f_c)^{2N}}} \\
+\implies 0.0203 &= (\frac{4.00}{f_c})^{2N} \\
+0.001 &= \frac{1}{\sqrt{1 + (40.1/f_c)^{2N}}} \\
+\implies 999999 &= (\frac{40.1}{f_c})^{2N} \\
+49261000 &= (\frac{40.1}{4.00})^{2N} \\
+\implies N &= \frac{\ln 49261000}{2\ln (40.1/4.00)} \\
+&\approx 3.84
+\end{align*}
+
+Round up, $N = 4$. Now, plug in to each equation and solve for the cutoff
+frequency.
+\begin{align*}
+0.990 &= \frac{1}{\sqrt{1 + (4.00/f_c)^8}} \\
+\implies f_c &= 6.51 \mathrm{kHz} \\
+0.001 &= \frac{1}{\sqrt{1 + (40.1/f_c)^8}} \\
+\implies f_c &= 7.13 \mathrm{kHz}
+\end{align*}
+
+Cutoff frequency is represented as $6.51 < f_c < 7.13$ kHz. The poles can easily
+be calculated, see the lecture slides for examples.
+
+How to implement this? Use two series Sallen-Key op-amp circuits, one for each
+pair of poles. Solve for the resistor and capacitor values, then the circuit can
+be built.

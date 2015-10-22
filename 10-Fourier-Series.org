@@ -1,0 +1,91 @@
+#+TITLE: Fourier Series
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-15
+
+* What is a Fourier Series?
+
+If $x(t)$ is a periodic signal with period $T$ seconds, it can be written as a
+sum of sinusoids with phase shifts:
+$$ x(t) = c_0 + c_1 \cos(\frac{2\pi}{T} t - \theta_1) + c_2 \cos(\frac{4\pi}{T} t - \theta_2) + ... $$
+
+The $c_1$ cosine is called the /fundamental/ sinusoid, with a frequency of 
+$\frac{1}{T}$ hertz. The second cosine has a frequency of $\frac{2}{T}$ hertz,
+and is called a /harmonic/.
+
+Alternatively, we can decompose $x(t)$ into a sum of sines and cosines:
+$$ x(t) = a_0 + a_1 \cos(\frac{2\pi}{T} t) + a_2 \cos(\frac{2\pi}{T} t) + ... +
+b_1 \sin(\frac{2\pi}{T} t) + b_2 \sin(\frac{2\pi}{T} t) + ...
+$$
+
+$x(t)$ can also be written as a sum of complex exponential functions. This is 
+helpful if you cannot eliminate complex poles from a Laplace equation.
+* Line spectrum
+
+The spectrum of a periodic signal is the set of coefficients of a signal's
+Fourier series.
+
+A /one-sided/ spectrum shows a plot of frequency versus amplitude for real
+values.
+A /two-sided/ spectrum shows of frequency vs the magnitude of each complex term
+in the equation for $x(t)$. This will include negative frequencies (due to
+complex conjugates).
+* Average Power
+
+Average power of a sinusoid is $\frac{1}{2} A^2$, so the average power of a
+Fourier series expansion is equal to the DC average power plus the sum of
+the average powers of each sinusoid.
+* Computation of Fourier Series the Hard Way
+  
+Convert periodic signal $x(t) = \{\frac{\pi}{4}, 0 < t < \pi; -\frac{\pi}{4}, \pi < t < 2\pi\}$
+to Fourier series representation. This is a square wave with period $T = 2\pi$.
+
+Use the formula $a_n = \frac{2}{T} \int_{-T/2}^{T/2} x(t) \cos(\frac{2\pi}{T} nt) dt$
+to get the even coefficients of $x(t)$. 
+For this particular example, $a_n = 0$, because $x(t)$ is odd.
+
+Now, find the odd coefficients of $x(t)$ using the formula
+$b_n = \frac{2}{T} \int_{-T/2}^{T/2} x(t) \sin (\frac{2\pi}{T} nt) dt$.
+For this particular example, $b_n = \frac{1}{n}$ for $n$ odd, and $b_n = 0$ for
+$n$ even.
+
+This looks like $x(t) = \sin(t) + \frac{1}{3} \sin(3t) + \hdots$. This converges
+to the original function.
+
+* Even and Odd Functions Revisited
+
+- A symmetric integral of an odd function is 0.
+- A symmetric integral of an even function is 2 times the one-sided integral.
+
+* Computation of Fourier Series the Easy Way
+  
+1. Determine whether $x(t)$ is an even or odd function. Eliminate unnecessary
+   integrals if you can.
+2. Use the even/odd state of the integrand to simplify the remaining integrals.
+   
+** Complex exponential form
+
+Instead of calculating two separate integrals, do 
+$x_n = \frac{1}{T} \int_{-T/2}^{T/2} x(t) e^{-j \frac{2\pi}{T} nt} dt$ to get
+the coefficients of the complex exponential expansion. The complex exponential
+expansion then looks like:
+$$ x(t) = \sum |x_n|^2 $$
+*Remember:* take the /magnitude/ of each coefficient.
+
+This is generally the easiest way to do these problems.
+* Using Matlab
+
+Sometimes, these integrals get pretty disgusting and require /multiple/ rounds
+of integration /by parts/.
+
+To do these integrals with Matlab, simply do:
+#+BEGIN_SRC
+> int('x(t)*exp(-j*n*t)',-T/2,T/2)/4/T
+#+END_SRC
+
+That spits out $x_n$.
+
+Alternatively, you can do numeric integration using the midpoint rule and a
+sufficiently large number of iterations.
+* Using transformations
+  
+Begin by scaling the amplitude and time, then apply a time shift.
