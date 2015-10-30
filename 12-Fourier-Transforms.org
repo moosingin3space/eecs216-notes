@@ -1,0 +1,96 @@
+#+TITLE: Fourier Transform
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-10-27
+#+LATEX_HEADER: \newcommand*\F{\mathcal{F}}
+#+LATEX_HEADER: \newcommand*\L{\mathcal{L}}
+#+LATEX_HEADER: \newcommand*\intcumm{\int_{-\infty}^{\infty}}
+
+* Definition of Fourier Transform
+  
+- Forward :: $X(\omega) = \F \{x(t)\} = \int_{-\infty}^{\infty} x(t) e^{-j\omega t} dt$
+- Inverse :: $x(t) = \F^{-1} \{X(\omega)\} = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(\omega) e^{j\omega t} d\omega$
+
+If $x(t)$ is causal, the Laplace transform of $x(t)$ and the Fourier transform
+of $x(t)$ are the same.
+
+*NOTE:* an LTI transfer function can be converted to a frequency response
+function by using a Fourier transform. If the system is causal, the Laplace
+transform can be substituted.
+
+* What is a Fourier Transform used for?
+  
+- Splits $x(t)$ into its spectrum components. 
+  - Represents $x(t)$ as a superposition of complex exponentials
+- Analogous to the Fourier Series, but continuous instead of discrete.
+- Communication -- separating signals on the same voltage.
+  
+* Table of Fourier Transforms
+
+| $x(t)$                        | $\F\{x(t)\}$                                                                               |
+|-------------------------------+--------------------------------------------------------------------------------------------|
+| $\cos(\omega_0 t)$            | $\pi\delta(\omega + \omega_0) + \pi\delta(\omega - \omega_0)$                              |
+| $\sin(\omega_0 t)$            | $j\pi\delta(\omega + \omega_0) + j\pi\delta(\omega - \omega_0)$                            |
+| $A \cos(\omega_0 t + \theta)$ | $A\pi e^{j\theta} \delta(\omega - \omega_0) + A\pi e^{-j\theta} \delta(\omega + \omega_0)$ |
+| $e^{-at} u(t)$                | $\frac{1}{j \omega + a}$                                                                   |
+| $e^{-a\abs{t}} u(t)$          | $\frac{2a}{\omega^2 + a^2}$                                                                |
+| wedge of radius $t_0$         | $2t_0 \frac{\sin(t_0 \omega)}{t_0 \omega}$                                                 |
+| Gaussian distribution         | Gaussian distribution                                                                      |
+
+* Properties of Fourier Transform
+  
+- Linearity
+- Convolution in time domain is multiplication in the Fourier domain
+- The DC component of a Fourier Transform is the average value of the equation
+  over a period.
+
+- Duality :: $\F\{\F\{x(t)\}\}$ will look like $x(t)$.
+- Time delay :: $\F\{x(t - D)\} = X(\omega) e^{-j\omega D}$
+- Modulation :: $\F\{x(t) e^{jat}\} = X(\omega - a)$
+* Sinc function
+
+A /sinc-type/ function is something that looks like $\frac{\sin (\omega_0 t)}{t}$. 
+
+The Fourier transform of a sinc-type function looks like a unit wedge centered
+at the origin, with width $2\omega_0$.
+
+An impulse response that looks like a sinc function is a "brick-wall" low-pass
+filter. This type of filter immediately cuts off at that frequency. This filter
+is not causal nor stable, which means it cannot be implemented in a real
+circuit.
+
+** Brick wall band-pass filter
+
+Use the impulse response:
+\begin{align*}
+h(t) &= 2\frac{\sin(\omega_0 t)}{\pi t} \cos (\omega_c t) \\
+\omega_0 &= \frac{\omega_H - \omega_L}{2} \\
+\omega_c &= \frac{\omega_L + \omega_H}{2}
+\end{align*}
+
+* LTI Systems
+
+The output of an LTI system can be found by taking the Fourier transform of both
+the input and impulse response functions, multiplying them, and taking the
+inverse-Fourier transform. 
+
+You can also convert the impulse response to a frequency response function by
+taking the Fourier transform, then applying sine-in, sine-out rules.
+* Conjugate Symmetry
+
+If $x(t)$ is real-valued, the following will hold:
+\begin{align*}
+X(-j\omega) &= X^*(j\omega) \\
+\Re[X(j\omega)] &= \Re[X(-j\omega)] \\
+\Im[X(j\omega)] &= -\Im[X(-j\omega)] 
+\end{align*}
+Real part and Fourier magnitude are even functions, imaginary and Fourier phase
+are odd functions.
+
+This implies that if $x(t)$ is real and even, then $X(j\omega)$ is real and
+even. If $x(t)$ is real and odd, then $X(j\omega)$ is purely imaginary.
+* Energy of a periodic signal
+
+Parseval's theorem states that the energy of the signal can be computed in both
+the time and frequency domains:
+
+$$ \intcumm |x(t)|^2 dt = \frac{1}{2\pi} \intcumm |X(\omega)|^2 d\omega $$
