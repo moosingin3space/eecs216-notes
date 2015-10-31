@@ -48,7 +48,7 @@ transform can be substituted.
 - Modulation :: $\F\{x(t) e^{jat}\} = X(\omega - a)$
 * Sinc function
 
-A /sinc-type/ function is something that looks like $\frac{\sin (\omega_0 t)}{t}$. 
+A /sinc-type/ function is something that looks like $\frac{\sin (\omega_0 t)}{\pi t}$. 
 
 The Fourier transform of a sinc-type function looks like a unit wedge centered
 at the origin, with width $2\omega_0$.
