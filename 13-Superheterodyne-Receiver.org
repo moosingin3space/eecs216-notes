@@ -1,0 +1,71 @@
+#+TITLE: Superheterodyne Receiver
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-11-05
+#+LATEX_HEADER: \newcommand*\fourier{\mathcal{F}}
+#+LATEX_HEADER: \newcommand*\lapl{\mathcal{L}}
+#+LATEX_HEADER: \newcommand*\intcumm{\int_{-\infty}^{\infty}}
+
+* Double Side-band Suppressed Carrier Modulation
+  
+Message $x(t)$ is multiplied by a sine wave at carrier frequency $f_m$ to produce $y(t)$:
+$$ y(t) = 2x(t) \cos(2\pi f_m t) $$
+
+To decode it, you multiply by the carrier frequency again:
+$$ z(t) = 2x(t) \cos(2\pi f_m t) \cos(2\pi f_m t + \theta) $$
+
+Using trig identities, you see that by using a low-pass filter, you can correct for the phase:
+$$ z(t) = x(t) \cos (4\pi f_m t + \theta) + x(t) \cos(\theta) $$
+
+*Problem:* When $\theta = 90^{\circ}$, the signal is effectively erased.
+
+* AM Modulation
+
+Key idea: use a *carrier wave* to handle the original signal $x(t)$. The carrier
+looks like $2m \cos(2\pi f_m t)$, where $m \ge |x(t)|$.
+$$ y(t) = [m + x(t)] 2 \cos(2\pi f_m t) $$
+
+The /amplitude/ of $y(t)$ varies in time by $2(m + x(t))$.
+
+To decode the AM signal, you pass it through an /envelope detector/ to eliminate
+half of the carrier wave, then pass it through a low-pass filter.
+
+** Envelope Detection
+   
+Usually simply implemented as a diode. 
+
+* Superheterodyne Receiver
+
+- Given :: a message $x(t)$ modulated as AM
+- Goal :: recover $x(t)$ from the modulated signal $y(t)$
+- Using :: Intermediate frequency $f_{IF} = 455$ kHz
+- Problem :: It's not easy to point at a specific frequency.
+
+*Solution:* Instead of building a variable-frequency, highly-selective fliter,
+you build a fixed-frequency selective filter with a fixed, narrow pass-band.
+Multiply the signal $y(t)$ by $\cos (2\pi f_{LO} t)$, which will de-modulate it
+to the intermediate frequency. Next, perform envelope detection on the
+demodulated signal and pass it through a highly selective band-pass filter.
+\begin{align*}
+z(t) &= [m + x(t)] 2 \cos(2\pi f_m t) \cos(2\pi f_{LO} t) \\
+f_{LO} &= f_m \pm f_{IF}
+\end{align*}
+
+[[./superhet-diagram.xoj]]
+
+To change the station you are tuned to, simply change the frequency of the
+local oscillator. 
+
+** Image frequencies
+
+If you tune to a station at 1000 kHz, you will also get something at 90 kHz
+due to the oscillator frequency. In order to eliminate image frequencies, use
+an image frequency to reject anything below the intermediate frequency. This 
+makes it impossible to tune to anything below the intermediate frequency.
+
+The image frequencies will be $f_{LO} - f_{IF}$ and $f_{LO} + f_{IF}$. Often,
+it's easiest to draw a picture instead of relying on the formulas, though --
+different situations can lead to different issues.
+
+Should you choose to demodulate using a higher LO frequency, the image frequency
+will be /above/ the intermediate frequency. For this reason, it is essential to
+find an acceptable range for the LO frequency.

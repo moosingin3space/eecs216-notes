@@ -1,14 +1,14 @@
 #+TITLE: Fourier Transform
 #+AUTHOR: Nathan Moos
 #+DATE: 2015-10-27
-#+LATEX_HEADER: \newcommand*\F{\mathcal{F}}
-#+LATEX_HEADER: \newcommand*\L{\mathcal{L}}
+#+LATEX_HEADER: \newcommand*\fourier{\mathcal{F}}
+#+LATEX_HEADER: \newcommand*\lapl{\mathcal{L}}
 #+LATEX_HEADER: \newcommand*\intcumm{\int_{-\infty}^{\infty}}
 
 * Definition of Fourier Transform
   
-- Forward :: $X(\omega) = \F \{x(t)\} = \int_{-\infty}^{\infty} x(t) e^{-j\omega t} dt$
-- Inverse :: $x(t) = \F^{-1} \{X(\omega)\} = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(\omega) e^{j\omega t} d\omega$
+- Forward :: $X(\omega) = fourier \{x(t)\} = \int_{-\infty}^{\infty} x(t) e^{-j\omega t} dt$
+- Inverse :: $x(t) = fourier^{-1} \{X(\omega)\} = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(\omega) e^{j\omega t} d\omega$
 
 If $x(t)$ is causal, the Laplace transform of $x(t)$ and the Fourier transform
 of $x(t)$ are the same.
@@ -26,7 +26,7 @@ transform can be substituted.
   
 * Table of Fourier Transforms
 
-| $x(t)$                        | $\F\{x(t)\}$                                                                               |
+| $x(t)$                        | $fourier\{x(t)\}$                                                                               |
 |-------------------------------+--------------------------------------------------------------------------------------------|
 | $\cos(\omega_0 t)$            | $\pi\delta(\omega + \omega_0) + \pi\delta(\omega - \omega_0)$                              |
 | $\sin(\omega_0 t)$            | $j\pi\delta(\omega + \omega_0) + j\pi\delta(\omega - \omega_0)$                            |
@@ -43,9 +43,9 @@ transform can be substituted.
 - The DC component of a Fourier Transform is the average value of the equation
   over a period.
 
-- Duality :: $\F\{\F\{x(t)\}\}$ will look like $x(t)$.
-- Time delay :: $\F\{x(t - D)\} = X(\omega) e^{-j\omega D}$
-- Modulation :: $\F\{x(t) e^{jat}\} = X(\omega - a)$
+- Duality :: $fourier\{fourier\{x(t)\}\}$ will look like $x(t)$.
+- Time delay :: $fourier\{x(t - D)\} = X(\omega) e^{-j\omega D}$
+- Modulation :: $fourier\{x(t) e^{jat}\} = X(\omega - a)$
 * Sinc function
 
 A /sinc-type/ function is something that looks like $\frac{\sin (\omega_0 t)}{\pi t}$. 
@@ -94,3 +94,44 @@ Parseval's theorem states that the energy of the signal can be computed in both
 the time and frequency domains:
 
 $$ \intcumm |x(t)|^2 dt = \frac{1}{2\pi} \intcumm |X(\omega)|^2 d\omega $$
+* Frequency Domain Multiplexing
+
+Transmit these signals along a single wire:
+- Given :: 3 signals: $l(t)$, $b(t)$, $s(t)$
+- Know :: All signals are band-limited to 10 kHz
+          
+** Double Sideband
+          
+Let $L(f)$, $B(f)$, and $S(f)$ be the Fourier transforms of each time-domain
+signal. The transformed signals will use Hz instead of radians per second.
+
+To transmit these signals, use
+$$ y(t) = l(t) + 2b(t) \cos(2\pi 20 000t) + 2s(t) \cos(2\pi 40 000t) $$
+
+Each signal's spectrum is completely reproducible from the modulated signal. To
+recover the original signal, shift the Fourier transform over and reject the
+remaining signals with a filter.
+
+** Single Sideband
+   
+The same as double sideband, except it eliminates the lower sideband.
+
+** What about phase?
+
+If the signal is 90 degrees out of phase, there is *no way* to recover the
+original signal. Additionally, signals will experience variable fading as
+distance changes. A reasonably good alternative to simple DSB/SSB transmission
+that can fix the problems with phase is /amplitude modulation/
+
+** AM radio
+
+- Choose a /carrier frequency/ $f_0$ to be much larger than the input frequency.
+- To associate the signal with the carrier frequency, simply use the formula
+  $\mathrm{AM}(t) = 2 (x(t) + 1) \cos (2\pi f_0 t)$. This signal provides a
+  time-varying amplitude.
+
+- Advantage :: Receiver requires no electrical power. Phase-correction is no
+               longer necessary.
+- Disadvantage :: Transmitter requires more power.
+
+To decode AM radio, use a low-pass filter to reject the carrier wave.
