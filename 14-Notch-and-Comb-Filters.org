@@ -1,0 +1,32 @@
+#+TITLE: Notch and Comb Filters
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-11-12
+
+* Effect of Poles and Zeros on Frequency Response
+  
+Zeros set the frequency response to 0, poles set the frequency response gain to
+a large number.
+
+* Line Filtering to Eliminate Single Sinusoids
+  
+- Goal :: Can we eliminate 60 Hz EMI from wall sockets?
+          
+What if we set zeros at $a = \pm j2\pi 60$ and poles very close?
+\begin{align*}
+H(s) &= \frac{(s + j2\pi60)(s - j2\pi60)}{(s + 1 + j2\pi60)(s + 1 - j2\pi60)} \\
+\implies H(j\omega) &= \frac{(2\pi60)^2 - \omega^2}{(2\pi60)^2 + 1 - \omega^2 + j2\omega}
+\end{align*}
+
+This eliminates 60 Hz EMI and only affects closely-surrounding frequencies. This
+filter is called a /notch filter/ because the frequency response looks like a
+notch.
+
+** Trade-offs
+
+To make the filter more selective, move the poles closer to the zeros. Problem
+with that is that the transient response will decay more slowly.
+
+* Comb Filtering to Eliminate Periodic Signals by Eliminating Harmonics
+
+To eliminate periodic interference, you need to eliminate all harmonics. The
+transfer function looks like a comb, hence the name "comb filter".
