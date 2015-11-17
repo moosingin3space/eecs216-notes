@@ -1,0 +1,56 @@
+#+TITLE: Sampling Theorem
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-11-17
+
+* Statement of Sampling Theorem
+  
+Given a continuous-time signal $x(t)$ bandlimited to $B$ Hertz, is it possible
+to exactly reproduce it with only discrete samples?
+
+Let $n$ be a positive integer, $T$ be the sampling period, and 
+$S = \frac{1}{T}$.
+
+The /Nyquist-Shannon Sampling Theorem/ states that if $S > 2B$, $x(t)$ can be
+reconstructed from $x(nT)$.
+
+** Example
+
+Let $x(t) = \cos(2\pi 1000 t)$ sampled at $S = 8000$. Therefore, 
+$T = \frac{1}{8000}$. 
+$$ x(nT) = \cos(2\pi \frac{1000}{8000} n) = \cos(\frac{\pi}{4} n) $$
+
+Why can this reproduce $x(t)$?
+
+* Derivation of Sampling Theorem
+
+Let $p(t) = \sum_{n=-\infty}^{\infty} \delta (t - nT)$ -- a function
+corresponding to all pulses. Therefore, $x(t) p(t)$ will be equal to the
+weighted pulse train.
+
+Taking the Fourier transform of $x(t) p(t)$ will shift the spectrum over. The
+output of this will have many copies of the spectrum. To recover the original
+signal, use a low-pass filter. 
+
+The interpolation function looks like
+$$ x(t) = \sum x(nT) (2BT) \frac{\sin(2\pi B(t - nT)}{2\pi B(t - nT)} $$
+The problem with this is that it's not causal, nor is it stable. From an
+engineer's standpoint, we simply feed $x(t) p(t)$ into a low-pass filter.
+
+* Ideal Reconstruction
+  
+Provided that $S - B > B$ (which $\implies S > 2B$), it is possible to reproduce
+a signal in its entirety by multiplying it by a set of impulses and using a
+low-pass filter. The low-pass filter's cut-off frequency can be set at 
+$\frac{S}{2}$.
+
+* Determining Bandwidths
+  
+Fourier transform the signal and figure out the largest frequency.
+
+* Finite Pulse-Width Sampling
+* Undersampling and Aliasing
+  
+If we assign $S \le 2B$, then image spectrum will overlap actual spectrum,
+making it impossible to low-pass the original signal away from the image
+spectrum. This is referred to as /aliasing/, where values from the image
+spectrum masquerade as values from the actual spectrum.
