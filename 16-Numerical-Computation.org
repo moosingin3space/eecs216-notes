@@ -1,0 +1,19 @@
+#+TITLE: Numerical Computation
+#+AUTHOR: Nathan Moos
+#+DATE: 2015-11-24
+
+* Computing Convolutions
+  
+Let $\Delta = \frac{T_y}{N}$ where $N$ is the number of discrete spaces. Take 
+each function $x(t)$, $y(t)$, and $h(t)$ and transform them to $x(n\Delta)$,
+$y(n\Delta)$, $h(n\Delta)$, then use the rectangle or trapezoid rule to
+numerically integrate them.
+
+Alternatively, Matlab's =conv= function performs discrete convolutions.
+
+* Computing Fourier Transforms
+
+Begin by discretizing the functions. Next, sample the input function at 
+$N = 2FT$ (sampling theorem) where $F$ is the frequency bandwidth and $T$ is the
+time of a single period. If $N$ is a power of 2 or has many small factors, use
+Matlab's =fft= function, which uses the Fast Fourier Transform algorithm.

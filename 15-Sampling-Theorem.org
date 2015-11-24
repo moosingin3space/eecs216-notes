@@ -54,3 +54,14 @@ If we assign $S \le 2B$, then image spectrum will overlap actual spectrum,
 making it impossible to low-pass the original signal away from the image
 spectrum. This is referred to as /aliasing/, where values from the image
 spectrum masquerade as values from the actual spectrum.
+* Oversampling
+
+In practice, we need to sample much faster than the Nyquist-Shannon rate. This
+is due to the fact that brick-wall low-pass filters are not realizable in the
+real world. Oversampling makes spectrum space for a lower-order Butterworth
+filter.
+
+* Linear Interpolation
+
+Convolving the signal $x(t) p(t)$ with a triangle wave will produce a linear
+interpolation of the signal.
